@@ -11,6 +11,7 @@ public class ServerDemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		System.out.println("SpringBoot测试！！！！");
 	}
 
 }
