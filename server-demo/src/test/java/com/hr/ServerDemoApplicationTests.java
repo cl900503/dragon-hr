@@ -6,23 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.hr.utils.OfficeUtil;
+import com.hr.service.HrService;
 
+/**
+ * SpringBootTest
+ * @author chenlong
+ * @email 1021773811@qq.com
+ * @date 2018年7月19日下午2:31:09
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ServerDemoApplicationTests {
 	
 	@Autowired
-	private OfficeUtil OfficeUtil;
-	
+	private HrService hrService;
+
 	@Test
 	public void contextLoads() {
 		System.out.println("SpringBoot测试！！！！");
 	}
 	
 	@Test
-	public void testFf() {
-		OfficeUtil.ff("hello");
+	public void testGetData() {
+		hrService.getData("C:\\Excel\\aa.xls");
 	}
 
 }
