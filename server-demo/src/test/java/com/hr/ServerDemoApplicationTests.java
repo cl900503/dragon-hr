@@ -28,7 +28,7 @@ public class ServerDemoApplicationTests {
 	
 	@Test
 	public void testGetData() {
-		hrService.getData("C:\\Excel\\aa.xls");
+		hrService.getData("C:\\Excel\\附件一、南京总部-原.xlsx");
 	}
 
 }
