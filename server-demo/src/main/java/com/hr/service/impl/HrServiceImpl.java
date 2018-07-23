@@ -1,10 +1,11 @@
 package com.hr.service.impl;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,7 +28,7 @@ public class HrServiceImpl implements HrService{
 	private static final Logger LOG = LoggerFactory.getLogger(HrServiceImpl.class);
 	
 	@Override
-	public Map<String, String> getData(String filePath) {
+	public Map<Integer,Map<String, String>> getData(String filePath) {
 		
 		//表格对象
 		Workbook workbook = OfficeUtil.readExcel(filePath);
@@ -47,9 +48,9 @@ public class HrServiceImpl implements HrService{
 		}
 		System.out.println(titleMap);
 		//从第二行开始读数据（第一行为标题）
-		Map<Integer,Map<String, String>> dataList = new HashMap<Integer,Map<String, String>>();
+		Map<Integer,Map<String, String>> datasMap = new HashMap<Integer,Map<String, String>>();
 		//结果集
-		Map<Integer,Map<String, String>> resultDataList = new HashMap<Integer,Map<String, String>>();
+		Map<Integer,Map<String, String>> resultDatasMap = new HashMap<Integer,Map<String, String>>();
 		for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
 			
 			//行数据
@@ -65,14 +66,48 @@ public class HrServiceImpl implements HrService{
 				data.put(title, cellValue);
 			}
 			
-			if("异常".equals(data.get("异常"))) {
-				resultDataList.put(rowNum, data);
-				System.out.println(data);
+			//异常一栏为异常，备注去掉二类和三类
+			if("异常".equals(data.get("异常")) && !data.get("备注").startsWith("二类") && !data.get("备注").startsWith("三类")) {
+				//只有迟到状态
+				if(data.get("迟到").startsWith("迟到") && !data.get("旷工").equals("旷工")) {
+					
+					//拿该用户昨天打开数据
+					Map<String, String> yesterdayData = datasMap.get(rowNum-1);
+					//如果是改用户的数据
+					if(data.get("用户ID").equals(yesterdayData.get("用户ID"))) {
+						//昨天下班打开时间
+						String yesterdayOffdutyTimeStr = yesterdayData.get("下班打卡时间");
+						//格式化
+						DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+						//如果不为空
+				    	if(!StringUtils.isEmpty(yesterdayOffdutyTimeStr)) {
+				    		LocalDateTime date= LocalDateTime.parse(yesterdayOffdutyTimeStr,formatter);
+				    		int hour = date.getHour();
+				    		//下班时间，如果加班到8点以后，今天的迟到就不算了
+				    		if(hour<20) {
+				    			resultDatasMap.put(rowNum, data);
+				    		}
+				    	//如果昨天没有下班打卡时间
+				    	}else {
+				    		resultDatasMap.put(rowNum, data);
+				    	}
+				    //如果没昨天打卡记录（比如：X月1号）
+					}else {
+						resultDatasMap.put(rowNum, data);
+					}
+				}else {
+					resultDatasMap.put(rowNum, data);
+				}
 			}
-			dataList.put(rowNum, data);
+			datasMap.put(rowNum, data);
 		}
 		
-		return null;
+		for(Integer key : resultDatasMap.keySet()) {
+			LOG.info(key+"----"+resultDatasMap.get(key));
+		}
+		LOG.info("统计完数据数量：{}",resultDatasMap.size());
+		
+		return resultDatasMap;
 	
 	}
 	

@@ -20,6 +20,6 @@ public interface HrService {
 	 * @param filePath 文件路径
 	 * @return
 	 */
-	Map<String, String> getData(String filePath);
+	Map<Integer,Map<String, String>> getData(String filePath);
 	
 }

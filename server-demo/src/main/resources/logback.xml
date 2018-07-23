@@ -1,0 +1,27 @@
+<configuration scan="true" scanPeriod="10 seconds">
+
+        <contextListener class="com.vrv.im.utils.logback.LoggerStartupListener" />
+
+        <appender name="ROLLING"
+                class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>C:\log\server-demo.log</file>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                        <maxHistory>30</maxHistory>
+                        <fileNamePattern>C:\log\server-demo-%d{yyyy-MM-dd}.%i.log
+                        </fileNamePattern>
+                        <timeBasedFileNamingAndTriggeringPolicy
+                                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                                <maxFileSize>100MB</maxFileSize>
+                        </timeBasedFileNamingAndTriggeringPolicy>
+                </rollingPolicy>
+                <encoder>
+                        <pattern>%d %-5level [%thread] %logger{n}.%method:%L-> %msg%n</pattern>
+                </encoder>
+        </appender>
+
+        <logger name="com.vrv.im" level="DEBUG" />
+
+        <root level="DEBUG">
+                <appender-ref ref="ROLLING" />
+        </root>
+</configuration>
