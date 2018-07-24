@@ -1,27 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
 <configuration scan="true" scanPeriod="10 seconds">
+	<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>C:\log\server-demo.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>C:\log\server-demo-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<maxFileSize>100MB</maxFileSize>    
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>2GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{n}.%method:%L-> %msg%n</pattern>
+		</encoder>
+	</appender>
 
-        <contextListener class="com.vrv.im.utils.logback.LoggerStartupListener" />
+	<logger name="com.hr" level="DEBUG" />
+	
+	<root level="DEBUG">
+		<appender-ref ref="ROLLING" />
+	</root>
 
-        <appender name="ROLLING"
-                class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <file>C:\log\server-demo.log</file>
-                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                        <maxHistory>30</maxHistory>
-                        <fileNamePattern>C:\log\server-demo-%d{yyyy-MM-dd}.%i.log
-                        </fileNamePattern>
-                        <timeBasedFileNamingAndTriggeringPolicy
-                                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                                <maxFileSize>100MB</maxFileSize>
-                        </timeBasedFileNamingAndTriggeringPolicy>
-                </rollingPolicy>
-                <encoder>
-                        <pattern>%d %-5level [%thread] %logger{n}.%method:%L-> %msg%n</pattern>
-                </encoder>
-        </appender>
-
-        <logger name="com.vrv.im" level="DEBUG" />
-
-        <root level="DEBUG">
-                <appender-ref ref="ROLLING" />
-        </root>
 </configuration>

@@ -2,7 +2,9 @@ package com.hr.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +40,7 @@ public class HrServiceImpl implements HrService{
 		//读取第一页（考勤信息）
 		Sheet sheet = workbook.getSheetAt(0);
 		
-		LOG.info("表格总行数：" + (sheet.getLastRowNum()+1));
+		LOG.info("表格总行数：{}",sheet.getLastRowNum()+1);
 		
 		//第一行（标题行）
 		Map<String, Integer> titleMap = new HashMap<String, Integer>();
@@ -57,6 +59,7 @@ public class HrServiceImpl implements HrService{
 			Row row = sheet.getRow(rowNum);
 			//保存行数据
 			Map<String, String> data = new HashMap<String, String>();
+			
 			//遍历列
 			for(String title:titleMap.keySet()) {
 				//列号
@@ -64,6 +67,10 @@ public class HrServiceImpl implements HrService{
 				//列值
 				String cellValue = row.getCell(cellNum).getStringCellValue();
 				data.put(title, cellValue);
+			}
+			
+			if(data.get("考勤日期").equals("2018-07-19")) {
+				continue;
 			}
 			
 			//异常一栏为异常，备注去掉二类和三类
@@ -102,10 +109,14 @@ public class HrServiceImpl implements HrService{
 			datasMap.put(rowNum, data);
 		}
 		
+		List<Map<String, String>> dataList = new ArrayList<Map<String, String>>();
 		for(Integer key : resultDatasMap.keySet()) {
-			LOG.info(key+"----"+resultDatasMap.get(key));
+			//LOG.info(key+"----"+resultDatasMap.get(key));
+			dataList.add(resultDatasMap.get(key));
 		}
-		LOG.info("统计完数据数量：{}",resultDatasMap.size());
+		//LOG.info("统计完数据数量：{}",resultDatasMap.size());
+		
+		OfficeUtil.writeExcel("C:\\Excel\\result\\a.xlsx","测试",titleMap,dataList);
 		
 		return resultDatasMap;
 	
