@@ -27,7 +27,6 @@ import com.hr.constants.OfficeConstant;
  * @email 1021773811@qq.com
  * @date 2018年7月19日上午10:30:35
  */
-@Component
 public class OfficeUtil {
 
 	/**
@@ -124,9 +123,9 @@ public class OfficeUtil {
 	        
 	        for(int i = 0; i < dataList.size(); i++) {
 	        	Map<String, String> data = dataList.get(i);
-	        	System.out.println(data);
+	        	//System.out.println(data);
+	        	Row dataRow = sheet.createRow(i+1);
 	        	for(String key : data.keySet()) {
-	        		Row dataRow = sheet.createRow(i);
 	        		//第几列
 	        		Cell dataCell = dataRow.createCell(titleMap.get(key));
 	        		//改列数据
@@ -143,7 +142,7 @@ public class OfficeUtil {
             outputStream.close();
 			
 		} catch (Exception e) {
-			LOG.error(e.toString());
+			LOG.error("writeExcel 异常...",e);
 		} 
 		
 		

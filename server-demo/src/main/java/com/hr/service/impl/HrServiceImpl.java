@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class HrServiceImpl implements HrService{
 		//从第二行开始读数据（第一行为标题）
 		Map<Integer,Map<String, String>> datasMap = new HashMap<Integer,Map<String, String>>();
 		//结果集
-		Map<Integer,Map<String, String>> resultDatasMap = new HashMap<Integer,Map<String, String>>();
+		Map<Integer,Map<String, String>> resultDatasMap = new LinkedHashMap<Integer,Map<String, String>>();
 		for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
 			
 			//行数据
@@ -111,7 +112,7 @@ public class HrServiceImpl implements HrService{
 		
 		List<Map<String, String>> dataList = new ArrayList<Map<String, String>>();
 		for(Integer key : resultDatasMap.keySet()) {
-			//LOG.info(key+"----"+resultDatasMap.get(key));
+			LOG.info(key+"----"+resultDatasMap.get(key));
 			dataList.add(resultDatasMap.get(key));
 		}
 		//LOG.info("统计完数据数量：{}",resultDatasMap.size());
