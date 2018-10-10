@@ -74,25 +74,35 @@ public class HrServiceImpl implements HrService {
 				// 列号
 				Integer cellNum = titleMap.get(title);
 				// 列值
-				String cellValue = row.getCell(cellNum).getStringCellValue();
+//				System.out.println(cellNum);
+//				System.out.println(cellNum+"--"+row.getCell(cellNum));
+				
+				String cellValue = row.getCell(cellNum) == null ? "" : row.getCell(cellNum).getStringCellValue();
 				data.put(title, cellValue);
 			}
 
-			if (data.get("考勤日期").equals("2018-07-19")) {
-				continue;
-			}
+//			if (data.get("考勤日期").equals("2018-07-19")) {
+//				continue;
+//			}
+			
+//			if(data.get("考勤日期").startsWith("2018-09")) {
+//				continue;
+//			}
 
 			// 备注去掉二类和三类
 			if (!data.get("备注").startsWith("二类") && !data.get("备注").startsWith("三类")) {
 				// 异常一栏为异常
 				if ("异常".equals(data.get("异常"))) {
 					// 只有迟到状态
-					if (data.get("迟到").startsWith("迟到") && !data.get("旷工").equals("旷工")) {
+					if (data.get("迟到").startsWith("迟到") && !data.get("旷工").equals("旷工") && !data.get("早退").startsWith("早退")) {
 
 						// 拿该用户昨天打开数据
 						Map<String, String> yesterdayData = datasMap.get(rowNum - 1);
+//						System.out.println(data);
+//						System.out.println(yesterdayData);
+//						System.out.println(rowNum);
 						// 如果是改用户的数据
-						if (data.get("用户ID").equals(yesterdayData.get("用户ID"))) {
+						if (yesterdayData != null && data.get("用户ID").equals(yesterdayData.get("用户ID"))) {
 							// 昨天下班打开时间
 							String yesterdayOffdutyTimeStr = yesterdayData.get("下班打卡时间");
 							// 格式化
@@ -160,13 +170,13 @@ public class HrServiceImpl implements HrService {
 			dataList.add(resultDatasMap.get(key));
 		}
 
-		OfficeUtil.writeExcel(targetFilePath, sheet.getSheetName(), titleMap, dataList);
+		System.out.println(OfficeUtil.writeExcel(targetFilePath, sheet.getSheetName(), titleMap, dataList));
 
 	}
 
 	public static void main(String[] args) {
 		HrService hrService = new HrServiceImpl();
-		hrService.statisticsTimeCardData("C:\\Excel\\附件一、南京总部-原.xlsx","C:\\Excel\\result\\附件一、南京总部-原.xlsx");
+		hrService.statisticsTimeCardData("C:\\Excel\\南京.xlsx","C:\\Excel\\result\\南京-result.xlsx");
 	}
 
 }

@@ -157,6 +157,7 @@ public class OfficeUtil {
 				}
 			} catch (IOException e) {
 				LOG.error("writeExcel 异常...", e);
+				return false;
 			}
 		}
 		return true;
