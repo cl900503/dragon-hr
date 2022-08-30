@@ -1,9 +1,7 @@
 package com.hr.service.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +59,7 @@ public class HrServiceHrsImpl implements HrService {
 		System.out.println(titleMap);
 
 		// 这个月的第一个星期6是几号
-		int first6Day = 2;
+//		int first6Day = 6;
 
 		// Map<String, List<String>> result = new HashMap<>();
 
@@ -154,21 +152,21 @@ public class HrServiceHrsImpl implements HrService {
 				jiabanMap.put(userName + "-20", new ArrayList<String>());
 			}
 
-			if (jiabanMap.get(userName + "-21") == null) {
-				jiabanMap.put(userName + "-21", new ArrayList<String>());
-			}
+//			if (jiabanMap.get(userName + "-21") == null) {
+//				jiabanMap.put(userName + "-21", new ArrayList<String>());
+//			}
 
 			if (jiabanMap.get(userName + "-22") == null) {
 				jiabanMap.put(userName + "-22", new ArrayList<String>());
 			}
 			
-			if (jiabanMap.get(userName + "-weekend-records") == null) {
-				jiabanMap.put(userName + "-weekend-records", new ArrayList<String>());
-			}
-
-			if (jiabanMap.get(userName + "-weekend-counts") == null) {
-				jiabanMap.put(userName + "-weekend-counts", new ArrayList<String>());
-			}
+//			if (jiabanMap.get(userName + "-weekend-records") == null) {
+//				jiabanMap.put(userName + "-weekend-records", new ArrayList<String>());
+//			}
+//
+//			if (jiabanMap.get(userName + "-weekend-counts") == null) {
+//				jiabanMap.put(userName + "-weekend-counts", new ArrayList<String>());
+//			}
 
 			data.forEach((riqi, list) -> {
 				// 排序打卡时间
@@ -186,8 +184,8 @@ public class HrServiceHrsImpl implements HrService {
 					// start...20/21/22以后打卡次数
 					if (hour >= 22) {
 						jiabanMap.get(userName + "-22").add(riqi);
-					} else if (hour >= 21) {
-						jiabanMap.get(userName + "-21").add(riqi);
+//					} else if (hour >= 21) {
+//						jiabanMap.get(userName + "-21").add(riqi);
 					} else if (hour >= 20) {
 						jiabanMap.get(userName + "-20").add(riqi);
 					} else if (hour < 6) {
@@ -200,39 +198,39 @@ public class HrServiceHrsImpl implements HrService {
 
 				});
 
-				// start...周末加班>8小时次数
-				// 格式化
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d");
-				LocalDate date = LocalDate.parse(riqi, formatter);
-				// 周六周日：计算工作时长
-				if ((date.getDayOfMonth() - first6Day) % 7 == 0 || (date.getDayOfMonth() - first6Day) % 7 == 1) {
-
-					// 根据list算时间:xxx-xxx-xxx
-
-					if (list.size() <= 1) {
-						jiabanMap.get(userName + "-weekend-records").add("[" + list.get(0) + "-未知]->0");
-						//jiabanMap.get(userName + "-weekend-counts").add("0");
-					} else {
-
-						DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd  HH:mm:ss");
-						LocalDateTime fromDate = LocalDateTime.parse(list.get(0), f);
-						LocalDateTime toDate = LocalDateTime.parse(list.get(list.size() - 1), f);
-						long minutes = ChronoUnit.MINUTES.between(fromDate, toDate);
-
-						String record = "[" + list.get(0) + "-" + list.get(list.size() - 1) + "]->" + minutes + "->"
-								+ minutes / 60 + "小时" + minutes % 60 + "分钟";
-						System.out.println(list);
-						jiabanMap.get(userName + "-weekend-records").add(record);
-
-						// 7小时50分钟当成8小时
-						if (minutes >= (7 * 60 + 50)) {
-							jiabanMap.get(userName + "-weekend-counts").add(riqi);
-						}
-
-					}
-
-				}
-				// end.周末加班>8小时次数
+//				// start...周末加班>8小时次数
+//				// 格式化
+//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d");
+//				LocalDate date = LocalDate.parse(riqi, formatter);
+//				// 周六周日：计算工作时长
+//				if ((date.getDayOfMonth() - first6Day) % 7 == 0 || (date.getDayOfMonth() - first6Day) % 7 == 1) {
+//
+//					// 根据list算时间:xxx-xxx-xxx
+//
+//					if (list.size() <= 1) {
+//						jiabanMap.get(userName + "-weekend-records").add("[" + list.get(0) + "-未知]->0");
+//						//jiabanMap.get(userName + "-weekend-counts").add("0");
+//					} else {
+//
+//						DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd  HH:mm:ss");
+//						LocalDateTime fromDate = LocalDateTime.parse(list.get(0), f);
+//						LocalDateTime toDate = LocalDateTime.parse(list.get(list.size() - 1), f);
+//						long minutes = ChronoUnit.MINUTES.between(fromDate, toDate);
+//
+//						String record = "[" + list.get(0) + "-" + list.get(list.size() - 1) + "]->" + minutes + "->"
+//								+ minutes / 60 + "小时" + minutes % 60 + "分钟";
+//						System.out.println(list);
+//						jiabanMap.get(userName + "-weekend-records").add(record);
+//
+//						// 7小时50分钟当成8小时
+//						if (minutes >= (7 * 60 + 50)) {
+//							jiabanMap.get(userName + "-weekend-counts").add(riqi);
+//						}
+//
+//					}
+//
+//				}
+//				// end.周末加班>8小时次数
 
 			});
 
@@ -241,13 +239,13 @@ public class HrServiceHrsImpl implements HrService {
 		Map<String, Integer> resultTitleMap = new HashMap<>();
 		resultTitleMap.put("姓名", 0);
 		resultTitleMap.put("20点", 1);
-		resultTitleMap.put("21点", 2);
-		resultTitleMap.put("22点", 3);
-		resultTitleMap.put("周六周日加班情况（>8小时次数）", 4);
-		resultTitleMap.put("20点打卡列表", 5);
-		resultTitleMap.put("21点打卡列表", 6);
-		resultTitleMap.put("22点打卡列表", 7);
-		resultTitleMap.put("周六周日加班情况", 8);
+//		resultTitleMap.put("21点", 2);
+		resultTitleMap.put("22点", 2);
+//		resultTitleMap.put("周六周日加班情况（>8小时次数）", 4);
+		resultTitleMap.put("20点打卡列表", 3);
+//		resultTitleMap.put("21点打卡列表", 6);
+		resultTitleMap.put("22点打卡列表", 4);
+//		resultTitleMap.put("周六周日加班情况", 8);
 
 		// 分析结果
 		Map<String, Map<String, String>> userMap = new HashMap<>();
@@ -298,8 +296,8 @@ public class HrServiceHrsImpl implements HrService {
 
 	public static void main(String[] args) {
 		HrService hrService = new HrServiceHrsImpl();
-		hrService.statisticsTimeCardData("C:\\Users\\chenlong\\Desktop\\hr\\考勤原始数据.xlsx",
-				"C:\\Users\\chenlong\\Desktop\\hr\\考勤原始数据-result.xlsx");
+		hrService.statisticsTimeCardData("C:\\Users\\chenlong\\Desktop\\hr\\加班考勤-7月.xlsx",
+				"C:\\Users\\chenlong\\Desktop\\hr\\加班考勤-7月-result.xlsx");
 	}
 
 }
