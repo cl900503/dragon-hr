@@ -42,7 +42,7 @@ public class DataHelper {
 		if (asMap != null && asMap.size() > 0) {
 			asMap.forEach((user, list) -> {
 				// 每个用户的打卡数据
-				System.out.println(user + ":" + list);
+//				System.out.println(user + ":" + list);
 				ResultData resultData = new ResultData();
 				resultData.setName(user.getName());
 				resultData.setDepartment(user.getDepartment());
